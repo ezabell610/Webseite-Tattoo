@@ -35,8 +35,18 @@ footer{
     align-items: center;
     width: 100%;
     background-color: #111111;
+    gap: 15px;
+}
+
+footer a{
     color:#E8E4Df;
-    font-size: 10px;
+    font-size: 15px;
+    text-decoration: none;
+}
+
+footer a:hover{
+    color: #873C43;
+    text-decoration: underline;
 }
 
 h1, h2, h3 {

@@ -63,19 +63,19 @@ prevButton.addEventListener("click", () => {
 
 // Endlos-Übergang
 slides.addEventListener("transitionend", (event) => {
+    if (event.target !== slides) return;  // ← nur das Container-Event nehmen
     if (event.propertyName !== "transform") return;
 
     if (currentSlide === allSlides.length - 1) {
         currentSlide = 1;
         moveSlide(false);
-    } 
-    else if (currentSlide === 0) {
+    } else if (currentSlide === 0) {
         currentSlide = allSlides.length - 2;
         moveSlide(false);
     }
 
     isAnimating = false;
-});
+});   
 
 // Bei Größenänderung Position anpassen
 window.addEventListener("resize", () => {

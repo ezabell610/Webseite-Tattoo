@@ -27,7 +27,7 @@
 
 .slides {
     display: flex;
-    gap: 20px;
+    gap: 10px;
     width: max-content;
     transition: transform 0.4s ease;
 }
