@@ -4,83 +4,90 @@ const carousel = document.querySelector(".carousel");
 const prevButton = document.querySelector(".carousel-button-l");
 const nextButton = document.querySelector(".carousel-button-r");
 
-// Ursprüngliche Bilder speichern
-const originalSlides = Array.from(slides.children);
+// Erst starten, wenn alle Bilder geladen sind
+window.addEventListener("load", () => {
 
-// Klone erstellen
-const firstClone = originalSlides[0].cloneNode(true);
-const lastClone = originalSlides[originalSlides.length - 1].cloneNode(true);
+    // Originalbilder speichern
+    const originalSlides = Array.from(slides.children);
+    const numberOfSlides = originalSlides.length;
 
-// Klone einfügen
-slides.appendChild(firstClone);
-slides.insertBefore(lastClone, slides.firstChild);
+    // Ganze Bilderreihe links und rechts klonen
+    const beforeClones = originalSlides.map(slide =>
+        slide.cloneNode(true)
+    );
 
-// Alle Bilder inklusive Klone
-const allSlides = Array.from(slides.children);
+    const afterClones = originalSlides.map(slide =>
+        slide.cloneNode(true)
+    );
 
-let currentSlide = 1;
-let isAnimating = false;
+    slides.prepend(...beforeClones);
+    slides.append(...afterClones);
 
-// Bildbreite + Abstand berechnen
-function getSlideWidth() {
-    const slideWidth = allSlides[0].getBoundingClientRect().width;
-    const gap = parseFloat(getComputedStyle(slides).columnGap) || 0;
+    const allSlides = Array.from(slides.children);
 
-    return slideWidth + gap;
-}
+    // Start beim ersten echten Bild
+    let currentSlide = numberOfSlides;
+    let isAnimating = false;
 
-// Position setzen
-function moveSlide(animated = true) {
-    const activeSlide = allSlides[currentSlide];
+    // Bildposition berechnen
+    function moveSlide(animated = true) {
+        const activeSlide = allSlides[currentSlide];
 
-    const position = activeSlide.offsetLeft
-        - (carousel.clientWidth - activeSlide.offsetWidth) / 2;
+        const position = activeSlide.offsetLeft
+            - (carousel.clientWidth - activeSlide.offsetWidth) / 2;
 
-    slides.style.transition = animated ? "transform 0.4s ease" : "none";
-    slides.style.transform = `translateX(-${position}px)`;
-}
+        slides.style.transition = animated
+            ? "transform 0.4s ease"
+            : "none";
 
-// Start beim ersten echten Bild
-moveSlide(false);
-
-// Vorwärts
-nextButton.addEventListener("click", () => {
-    if (isAnimating) return;
-
-    isAnimating = true;
-    currentSlide++;
-    moveSlide();
-});
-
-// Rückwärts
-prevButton.addEventListener("click", () => {
-    if (isAnimating) return;
-
-    isAnimating = true;
-    currentSlide--;
-    moveSlide();
-});
-
-// Endlos-Übergang
-slides.addEventListener("transitionend", (event) => {
-    if (event.target !== slides) return;  // ← nur das Container-Event nehmen
-    if (event.propertyName !== "transform") return;
-
-    if (currentSlide === allSlides.length - 1) {
-        currentSlide = 1;
-        moveSlide(false);
-    } else if (currentSlide === 0) {
-        currentSlide = allSlides.length - 2;
-        moveSlide(false);
+        slides.style.transform = `translateX(-${position}px)`;
     }
 
-    isAnimating = false;
-});   
+    // Vorwärts
+    nextButton.addEventListener("click", () => {
+        if (isAnimating) return;
 
-// Bei Größenänderung Position anpassen
-window.addEventListener("resize", () => {
-    if (!isAnimating) {
-        moveSlide(false);
-    }
+        isAnimating = true;
+        currentSlide++;
+        moveSlide();
+    });
+
+    // Rückwärts
+    prevButton.addEventListener("click", () => {
+        if (isAnimating) return;
+
+        isAnimating = true;
+        currentSlide--;
+        moveSlide();
+    });
+
+    // Endlos-Übergang
+    slides.addEventListener("transitionend", (event) => {
+        if (event.target !== slides) return;
+        if (event.propertyName !== "transform") return;
+
+        // Rechten Klonbereich verlassen
+        if (currentSlide >= numberOfSlides * 2) {
+            currentSlide -= numberOfSlides;
+            moveSlide(false);
+        }
+
+        // Linken Klonbereich verlassen
+        else if (currentSlide < numberOfSlides) {
+            currentSlide += numberOfSlides;
+            moveSlide(false);
+        }
+
+        isAnimating = false;
+    });
+
+    // Bei Fensteränderung neu ausrichten
+    window.addEventListener("resize", () => {
+        if (!isAnimating) {
+            moveSlide(false);
+        }
+    });
+
+    // Initiale Position
+    moveSlide(false);
 });
-
