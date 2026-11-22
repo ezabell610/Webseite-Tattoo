@@ -31,17 +31,23 @@ window.addEventListener("load", () => {
 
     // Bildposition berechnen
     function moveSlide(animated = true) {
-        const activeSlide = allSlides[currentSlide];
+    const activeSlide = allSlides[currentSlide];
 
-        const position = activeSlide.offsetLeft
-            - (carousel.clientWidth - activeSlide.offsetWidth) / 2;
+    allSlides.forEach(slide => {
+        slide.classList.remove("active");
+    });
 
-        slides.style.transition = animated
-            ? "transform 0.4s ease"
-            : "none";
+    activeSlide.classList.add("active");
 
-        slides.style.transform = `translateX(-${position}px)`;
-    }
+    const position = activeSlide.offsetLeft
+        - (carousel.clientWidth - activeSlide.offsetWidth) / 2;
+
+    slides.style.transition = animated
+        ? "transform 0.4s ease"
+        : "none";
+
+    slides.style.transform = `translateX(-${position}px)`;
+}
 
     // Vorwärts
     nextButton.addEventListener("click", () => {
@@ -90,4 +96,49 @@ window.addEventListener("load", () => {
 
     // Initiale Position
     moveSlide(false);
+
+    function updateGaps() {
+    const desiredGap = 10;
+
+    allSlides.forEach((slide, index) => {
+        const nextSlide = allSlides[index + 1];
+
+        if (!nextSlide) return;
+
+        const currentScale = index === currentSlide ? 1.1 : 0.85;
+        const nextScale = index + 1 === currentSlide ? 1.1 : 0.85;
+
+        const currentCorrection =
+            (1 - currentScale) * slide.offsetWidth / 2;
+
+        const nextCorrection =
+            (1 - nextScale) * nextSlide.offsetWidth / 2;
+
+        const calculatedGap =
+            desiredGap - currentCorrection - nextCorrection;
+
+        slide.style.marginRight = `${calculatedGap}px`;
+    });
+    }
+
+    function moveSlide(animated = true) {
+    const activeSlide = allSlides[currentSlide];
+
+    allSlides.forEach(slide => {
+        slide.classList.remove("active");
+    });
+
+    activeSlide.classList.add("active");
+
+    updateGaps();
+
+    const position = activeSlide.offsetLeft
+        - (carousel.clientWidth - activeSlide.offsetWidth) / 2;
+
+    slides.style.transition = animated
+        ? "transform 0.4s ease"
+        : "none";
+
+    slides.style.transform = `translateX(-${position}px)`;
+    }
 });

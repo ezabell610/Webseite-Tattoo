@@ -2,20 +2,23 @@
     position: relative;
     width: 100%;
     overflow: hidden;
+    padding: 25px 0;
+    box-sizing: border-box;
 }
 
-.carousel-buttons{
+.carousel-buttons {
     position: absolute;
     top: 50%;
     left: 0;
     width: 100%;
     display: flex;
     justify-content: space-between;
-    transform: translateY(-20%);
+    transform: translateY(-25%);
     z-index: 2;
 }
 
-.carousel-button-l, .carousel-button-r {
+.carousel-button-l,
+.carousel-button-r {
     background: none;
     border: none;
     padding: 0;
@@ -38,7 +41,8 @@
 
 .slides {
     display: flex;
-    gap: 10px;
+    align-items: center;
+    gap: 0;
     width: max-content;
     transition: transform 0.4s ease;
 }
@@ -47,14 +51,22 @@
     position: relative;
     width: fit-content;
     flex-shrink: 0;
-    display: inline-block;
     border-radius: 0.8rem;
+    transform: scale(0.85);
+    transform-origin: center center;
+    opacity: 0.6;
+    transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+.slide.active {
+    transform: scale(1.1);
+    opacity: 1;
 }
 
 .slide img {
     display: block;
     width: auto;
-    height: 400px;
+    height: 350px;
     max-width: none;
     object-fit: contain;
     border-radius: 0.8rem;
@@ -64,6 +76,7 @@
     content: "";
     position: absolute;
     inset: 0;
+    border: 2px solid #E8E4DF;
     border-radius: 0.8rem;
     box-shadow: inset 0 0 25px 12px #E8E4DF;
     pointer-events: none;
