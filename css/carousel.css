@@ -8,6 +8,7 @@
 
 .carousel-buttons {
     position: absolute;
+    pointer-events: none;
     top: 50%;
     left: 0;
     width: 100%;
@@ -24,6 +25,7 @@
     padding: 0;
     cursor: pointer;
     appearance: none;
+    pointer-events: auto;
 }
 
 .carousel-button-l svg,
@@ -45,6 +47,10 @@
     gap: 0;
     width: max-content;
     transition: transform 0.4s ease;
+}
+
+.slides.no-transition .slide {
+    transition: none !important;
 }
 
 .slide {

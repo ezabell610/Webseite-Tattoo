@@ -28,27 +28,21 @@ window.addEventListener("load", () => {
     // Start beim ersten echten Bild
     let currentSlide = numberOfSlides;
     let isAnimating = false;
+    
+    allSlides.forEach((slide, index) => {
+        slide.addEventListener("click", (event) => {
+            
+            if (event.target.closest("button")) return;
+            if (index === currentSlide) return;
+            if (isAnimating) return;
 
-    // Bildposition berechnen
-    function moveSlide(animated = true) {
-    const activeSlide = allSlides[currentSlide];
+            isAnimating = true;
+            currentSlide = index;
 
-    allSlides.forEach(slide => {
-        slide.classList.remove("active");
+            moveSlide();
+        });
     });
-
-    activeSlide.classList.add("active");
-
-    const position = activeSlide.offsetLeft
-        - (carousel.clientWidth - activeSlide.offsetWidth) / 2;
-
-    slides.style.transition = animated
-        ? "transform 0.4s ease"
-        : "none";
-
-    slides.style.transform = `translateX(-${position}px)`;
-}
-
+    
     // Vorwärts
     nextButton.addEventListener("click", () => {
         if (isAnimating) return;
@@ -68,24 +62,29 @@ window.addEventListener("load", () => {
     });
 
     // Endlos-Übergang
-    slides.addEventListener("transitionend", (event) => {
-        if (event.target !== slides) return;
-        if (event.propertyName !== "transform") return;
+slides.addEventListener("transitionend", (event) => {
+    if (event.target !== slides) return;
+    if (event.propertyName !== "transform") return;
 
-        // Rechten Klonbereich verlassen
-        if (currentSlide >= numberOfSlides * 2) {
-            currentSlide -= numberOfSlides;
-            moveSlide(false);
-        }
+    // Rechten Klonbereich verlassen
+    if (currentSlide >= numberOfSlides * 2) {
+        currentSlide -= numberOfSlides;
+        moveSlide(false);
+    }
 
-        // Linken Klonbereich verlassen
-        else if (currentSlide < numberOfSlides) {
-            currentSlide += numberOfSlides;
-            moveSlide(false);
-        }
+    // Linken Klonbereich verlassen
+    else if (currentSlide < numberOfSlides) {
+        currentSlide += numberOfSlides;
+        moveSlide(false);
+    }
 
+    // Browser den Positionswechsel verarbeiten lassen
+    slides.offsetHeight;
+
+    requestAnimationFrame(() => {
         isAnimating = false;
     });
+});
 
     // Bei Fensteränderung neu ausrichten
     window.addEventListener("resize", () => {
@@ -124,6 +123,9 @@ window.addEventListener("load", () => {
     function moveSlide(animated = true) {
     const activeSlide = allSlides[currentSlide];
 
+    // Transition für den Reset deaktivieren
+    slides.classList.toggle("no-transition", !animated);
+
     allSlides.forEach(slide => {
         slide.classList.remove("active");
     });
@@ -140,5 +142,5 @@ window.addEventListener("load", () => {
         : "none";
 
     slides.style.transform = `translateX(-${position}px)`;
-    }
+}
 });

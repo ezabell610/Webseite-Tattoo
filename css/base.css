@@ -21,6 +21,7 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    font-family: 'Arial', sans-serif;
 }
 
 section {
@@ -55,4 +56,9 @@ footer a:hover{
 
 h1, h2, h3 {
   text-align: center;
+}
+
+img {
+    pointer-events: none;
+    user-select: none;
 }
