@@ -1,0 +1,37 @@
+.me {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.me-img {
+    position: relative;
+    width: 300px;
+    border-radius: 0.8rem;
+    overflow: hidden;
+    transition: transform 0.4s ease;
+}
+
+.me-img:hover {
+    transform: scale(1.05);
+}
+
+.me-img img {
+    display: block;
+    width: 100%;
+    border-radius: inherit;
+}
+
+.me-img::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: inset 0 0 25px 12px #99938C;
+    pointer-events: none;
+}
+
+.me div {
+    width: 300px;
+}
+
